@@ -1,0 +1,26 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: echo
+  annotations:
+    # 独自の設定を metadata.annotations で行える
+    # nginx.ingress.kubernetes.io/server-snippet を使うと
+    # Nginxの記法でリクエストのフィルタリング処理などを挟み込むことができる
+    nginx.ingress.kubernetes.io/server-snippet: |
+      set $agentflag 0;
+
+      if ($http_user_agent ~* "(Mobile)") {
+        set $argumentflag 1;
+      }
+
+      if ($agentflag = 1) {
+        return 301 http://google.com/;
+      }
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /
+        backend:
+          serviceName: echo
+          servicePort: 80

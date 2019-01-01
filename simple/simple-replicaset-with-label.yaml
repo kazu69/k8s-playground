@@ -1,0 +1,80 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: echo-spring
+  labels:
+    app: echo 
+    release: spring
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: echo 
+      release: spring
+  template:
+    metadata:
+      labels:
+        app: echo
+        release: spring
+    spec:
+      containers:
+      - name: nginx 
+        image: nginx:latest 
+        env: 
+        - name: BACKEND_HOST
+          value: localhost:8080
+        ports:
+        - containerPort: 80 
+        command:
+            - sh
+            - -c
+            - while true; do echo $(hostname):a; sleep 10; done
+      - name: echo
+        image: hashicorp/http-echo:latest
+        ports:
+        - containerPort: 8080
+        command:
+            - sh
+            - -c
+            - while true; do echo $(hostname):a; sleep 10; done
+
+---
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: echo-summer
+  labels:
+    app: echo 
+    release: summer 
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: echo 
+      release: summer 
+  template:
+    metadata:
+      labels:
+        app: echo
+        release: summer 
+    spec:
+      containers:
+      - name: nginx 
+        image: gihyodocker/nginx:latest 
+        env: 
+        - name: BACKEND_HOST
+          value: localhost:8080
+        ports:
+        - containerPort: 80 
+        command:
+            - sh
+            - -c
+            - while true; do echo $(hostname):a; sleep 10; done
+      - name: echo
+        image: gihyodocker/echo:latest
+        ports:
+        - containerPort: 8080
+        command:
+            - sh
+            - -c
+            - while true; do echo $(hostname):a; sleep 10; done

@@ -1,0 +1,7 @@
+appVersion: v1
+kind: Service
+metadata:
+  name: hogemoge
+spec:
+  type: ExternalName
+  externalName: hogemoge.com
